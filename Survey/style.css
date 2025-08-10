@@ -1,0 +1,6 @@
+.font-poppins{font-family: 'Poppins', sans-serif;}
+.glass{ background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.7)); backdrop-filter: blur(8px); border-radius: 16px; }
+.card{ border-radius: 12px; }
+.animate-fadeIn{ animation: fadeIn 260ms ease; }
+@keyframes fadeIn{ from{ opacity: 0; transform: translateY(8px);} to{ opacity:1; transform: translateY(0);} }
+label input[type="radio"]{ width: 18px; height: 18px; }

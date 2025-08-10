@@ -1,0 +1,186 @@
+[
+  {
+    "name": "age",
+    "title": "Age",
+    "type": "mcq",
+    "section": "Part I - Demographic Profile",
+    "options": [
+      "16–17",
+      "18–19",
+      "20 and above"
+    ],
+    "required": true
+  },
+  {
+    "name": "sex",
+    "title": "Sex",
+    "type": "mcq",
+    "section": "Part I - Demographic Profile",
+    "options": [
+      "Male",
+      "Female",
+      "Prefer not to say"
+    ],
+    "required": true
+  },
+  {
+    "name": "strand",
+    "title": "Strand",
+    "type": "mcq",
+    "section": "Part I - Demographic Profile",
+    "options": [
+      "ICT – Programming",
+      "ICT – Animation",
+      "ICT – Other: (please specify)"
+    ],
+    "required": true
+  },
+  {
+    "name": "taken_nc2",
+    "title": "Have you already taken the NC II assessment?",
+    "type": "mcq",
+    "section": "Part I - Demographic Profile",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "required": true
+  },
+  {
+    "name": "passed_nc2",
+    "title": "If yes, did you pass?",
+    "type": "mcq",
+    "section": "Part I - Demographic Profile",
+    "options": [
+      "Yes",
+      "No"
+    ],
+    "required": false
+  },
+  {
+    "name": "pf_6",
+    "title": "I was confident in my skills before taking the NC II assessment.",
+    "type": "likert",
+    "section": "Part II - Personal Factors",
+    "required": true
+  },
+  {
+    "name": "pf_7",
+    "title": "I managed my time effectively during preparation.",
+    "type": "likert",
+    "section": "Part II - Personal Factors",
+    "required": true
+  },
+  {
+    "name": "pf_8",
+    "title": "I practiced regularly before the assessment.",
+    "type": "likert",
+    "section": "Part II - Personal Factors",
+    "required": true
+  },
+  {
+    "name": "pf_9",
+    "title": "I was motivated to perform well in the assessment.",
+    "type": "likert",
+    "section": "Part II - Personal Factors",
+    "required": true
+  },
+  {
+    "name": "af_10",
+    "title": "The school provided enough resources and facilities for NC II training.",
+    "type": "likert",
+    "section": "Part II - Academic/School-Related Factors",
+    "required": true
+  },
+  {
+    "name": "af_11",
+    "title": "My teachers/trainers were effective in delivering lessons.",
+    "type": "likert",
+    "section": "Part II - Academic/School-Related Factors",
+    "required": true
+  },
+  {
+    "name": "af_12",
+    "title": "The NC II review sessions were helpful in my preparation.",
+    "type": "likert",
+    "section": "Part II - Academic/School-Related Factors",
+    "required": true
+  },
+  {
+    "name": "af_13",
+    "title": "The number of practice activities given was sufficient.",
+    "type": "likert",
+    "section": "Part II - Academic/School-Related Factors",
+    "required": true
+  },
+  {
+    "name": "ef_14",
+    "title": "My family supported me in my NC II preparation.",
+    "type": "likert",
+    "section": "Part II - Environmental/Social Factors",
+    "required": true
+  },
+  {
+    "name": "ef_15",
+    "title": "My classmates or peers encouraged me to do well.",
+    "type": "likert",
+    "section": "Part II - Environmental/Social Factors",
+    "required": true
+  },
+  {
+    "name": "ef_16",
+    "title": "I had access to a conducive learning environment for review.",
+    "type": "likert",
+    "section": "Part II - Environmental/Social Factors",
+    "required": true
+  },
+  {
+    "name": "ef_17",
+    "title": "There were no major distractions during my preparation period.",
+    "type": "likert",
+    "section": "Part II - Environmental/Social Factors",
+    "required": true
+  },
+  {
+    "name": "pf2_18",
+    "title": "I was not nervous during the NC II assessment.",
+    "type": "likert",
+    "section": "Part II - Psychological/Emotional Factors",
+    "required": true
+  },
+  {
+    "name": "pf2_19",
+    "title": "I was able to handle stress well during the preparation and assessment.",
+    "type": "likert",
+    "section": "Part II - Psychological/Emotional Factors",
+    "required": true
+  },
+  {
+    "name": "pf2_20",
+    "title": "I believed in my ability to pass the assessment.",
+    "type": "likert",
+    "section": "Part II - Psychological/Emotional Factors",
+    "required": true
+  },
+  {
+    "name": "q21",
+    "title": "What was the most helpful factor that contributed to your NC II performance?",
+    "type": "textarea",
+    "section": "Part III - Open-Ended Questions",
+    "required": false
+  },
+  {
+    "name": "q22",
+    "title": "What challenges did you encounter during your NC II preparation?",
+    "type": "textarea",
+    "section": "Part III - Open-Ended Questions",
+    "required": false
+  },
+  {
+    "name": "q23",
+    "title": "What suggestions can you give to help future students perform better in the NC II assessment?",
+    "type": "textarea",
+    "section": "Part III - Open-Ended Questions",
+    "required": false
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "appsScriptUrl": "REPLACE_WITH_YOUR_APPS_SCRIPT_WEB_APP_URL",
+  "allowedCodes": [
+    "abc123",
+    "xyz789"
+  ]
+}

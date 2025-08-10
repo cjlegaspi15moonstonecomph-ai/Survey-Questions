@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Survey — NC II Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="style.css">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js"></script>
+<script src="firebase-config.js"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-pink-50 to-yellow-50 font-poppins text-slate-800">
+  <header class="fixed top-4 left-0 right-0 z-40 flex justify-center pointer-events-none">
+    <div class="w-full max-w-6xl px-4 pointer-events-auto">
+      <nav class="flex items-center justify-between bg-white/60 backdrop-blur rounded-full py-2 px-4 shadow-lg">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-full bg-gradient-to-br from-pink-500 to-orange-400 text-white font-bold">NCII</div>
+          <div class="hidden md:block">
+            <div class="font-semibold">NC II Survey</div>
+            <div class="text-xs text-slate-600">Factors Affecting Assessment Performance (SHS ICT)</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="index.html" class="px-3 py-2 rounded-full hover:scale-105 transition">Home</a>
+          <a href="survey.html" class="px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-yellow-400 text-white shadow hover:opacity-95 transition">Survey</a>
+          <a href="admin.html" class="px-3 py-2 rounded-full border hover:shadow transition">Admin</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto p-6 pt-28">
+    <div class="glass p-6 rounded-2xl shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold">Survey Questionnaire</h2>
+        <div class="text-sm text-slate-600">Please answer honestly — all responses are confidential</div>
+      </div>
+
+      <div id="progressWrap" class="mb-4">
+        <div class="text-sm text-slate-600 mb-1"><span id="qNum">1</span> / <span id="qTotal">1</span></div>
+        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+          <div id="progressBar" class="h-3 rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 w-0 transition-all"></div>
+        </div>
+      </div>
+
+      <form id="surveyForm" class="space-y-4">
+        <div id="questionArea"></div>
+
+        <div class="flex justify-between mt-6">
+          <button type="button" id="prevBtn" class="px-4 py-2 rounded-full border hover:shadow">Previous</button>
+          <div class="flex gap-2">
+            <button type="button" id="saveBtn" class="px-4 py-2 rounded-full border hover:shadow">Save</button>
+            <button type="button" id="nextBtn" class="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-pink-500 text-white shadow hover:scale-105">Next</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+
+<script>
+let questions = [];
+let current = 0;
+
+async function loadQuestions() {
+  const res = await fetch('questions.json');
+  questions = await res.json();
+  document.getElementById('qTotal').textContent = questions.length;
+  renderQuestion();
+  updateProgress();
+}
+function renderQuestion() {
+  const q = questions[current];
+  const area = document.getElementById('questionArea');
+  area.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'p-6 rounded-xl border animate-fadeIn bg-white shadow-lg';
+  const header = document.createElement('div'); header.className='flex items-start justify-between gap-4 mb-3';
+  const left = document.createElement('div');
+  const title = document.createElement('h3'); title.className='text-lg font-semibold'; title.textContent = (q.section ? q.section + ' – ' : '') + q.title;
+  left.appendChild(title);
+  if (q.instructions) {
+    const instr = document.createElement('p'); instr.className='text-sm text-slate-600 mt-1'; instr.textContent = q.instructions;
+    left.appendChild(instr);
+  }
+  card.appendChild(left);
+
+  const inputArea = document.createElement('div'); inputArea.className='mt-3';
+
+  if (q.type === 'mcq') {
+    const wrap = document.createElement('div'); wrap.className='grid gap-3';
+    q.options.forEach(opt => {
+      const id = 'opt_'+q.name+'_'+opt.replace(/\s+/g,'_');
+      const label = document.createElement('label'); label.className='flex items-center gap-3 p-3 rounded-lg border hover:shadow cursor-pointer';
+      const input = document.createElement('input'); input.type='radio'; input.name=q.name; input.value=opt; input.id=id;
+      const span = document.createElement('span'); span.textContent = opt;
+      label.appendChild(input); label.appendChild(span);
+      wrap.appendChild(label);
+    });
+    inputArea.appendChild(wrap);
+  } else if (q.type === 'likert') {
+    const wrap = document.createElement('div'); wrap.className='flex gap-2 flex-wrap';
+    for (let i=5;i>=1;i--) {
+      const btn = document.createElement('button'); btn.type='button';
+      btn.className='px-3 py-2 rounded-full border';
+      btn.textContent = i;
+      btn.dataset.value = i;
+      btn.addEventListener('click', ()=> {
+        [...wrap.querySelectorAll('button')].forEach(b=>b.classList.remove('bg-indigo-600','text-white'));
+        btn.classList.add('bg-indigo-600','text-white');
+        localStorage.setItem('survey_'+q.name, btn.dataset.value);
+      });
+      wrap.appendChild(btn);
+    }
+    const saved = localStorage.getItem('survey_'+q.name);
+    if (saved) {
+      const btns = wrap.querySelectorAll('button');
+      btns.forEach(b=>{ if (b.dataset.value === saved) b.classList.add('bg-indigo-600','text-white'); });
+    }
+    inputArea.appendChild(wrap);
+  } else if (q.type === 'text' || q.type==='number') {
+    const el = document.createElement('input'); el.type = q.type === 'number' ? 'number' : 'text'; el.id = q.name; el.className='w-full p-3 rounded-lg border';
+    el.value = localStorage.getItem('survey_'+q.name) || '';
+    el.addEventListener('input', e=> localStorage.setItem('survey_'+q.name, e.target.value));
+    inputArea.appendChild(el);
+  } else if (q.type === 'textarea') {
+    const ta = document.createElement('textarea'); ta.id=q.name; ta.rows=4; ta.className='w-full p-3 rounded-lg border';
+    ta.value = localStorage.getItem('survey_'+q.name) || '';
+    ta.addEventListener('input', e=> localStorage.setItem('survey_'+q.name, e.target.value));
+    inputArea.appendChild(ta);
+  } else if (q.type === 'select') {
+    const sel = document.createElement('select'); sel.id=q.name; sel.className='w-full p-3 rounded-lg border';
+    const empty = document.createElement('option'); empty.value=''; empty.textContent='Select...'; sel.appendChild(empty);
+    q.options.forEach(o=>{ const opt = document.createElement('option'); opt.value=o; opt.textContent=o; sel.appendChild(opt); });
+    sel.value = localStorage.getItem('survey_'+q.name) || '';
+    sel.addEventListener('change', e=> localStorage.setItem('survey_'+q.name, e.target.value));
+    inputArea.appendChild(sel);
+  }
+
+  card.appendChild(inputArea);
+  area.appendChild(card);
+
+  document.getElementById('qNum').textContent = current+1;
+  updateProgress();
+}
+
+function updateProgress() {
+  const perc = Math.round(((current+1)/questions.length)*100);
+  document.getElementById('progressBar').style.width = perc + '%';
+}
+
+document.getElementById('nextBtn').addEventListener('click', ()=> {
+  const q = questions[current];
+  const val = getAnswer(q);
+  if (q.required && (val === null || val === '')) {
+    Swal.fire('Required','Please answer the question before continuing','warning');
+    return;
+  }
+  if (current < questions.length-1) { current++; renderQuestion(); }
+  else submitSurvey();
+});
+document.getElementById('prevBtn').addEventListener('click', ()=> { if (current>0) { current--; renderQuestion(); } });
+document.getElementById('saveBtn').addEventListener('click', ()=> Swal.fire('Saved','Progress saved locally.','success'));
+
+function getAnswer(q) {
+  if (q.type==='mcq') {
+    return document.querySelector('input[name="'+q.name+'"]:checked')?.value || '';
+  } else if (q.type==='likert') {
+    return localStorage.getItem('survey_'+q.name) || '';
+  } else {
+    return document.getElementById(q.name)?.value || '';
+  }
+}
+
+async function submitSurvey() {
+  const payload = { timestamp: new Date().toISOString() };
+  questions.forEach(q => payload[q.name] = getAnswer(q));
+  try {
+    const cfg = await fetch('config.json').then(r=>r.json());
+    if (cfg.appsScriptUrl and cfg.appsScriptUrl.includes('https://')) {
+      await fetch(cfg.appsScriptUrl, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    }
+  } catch(e){ console.warn('Apps Script failed', e); }
+  try {
+    const db = firebase.firestore();
+    await db.collection('responses').add(payload);
+  } catch(e){ console.warn('Firestore save failed', e); }
+  questions.forEach(q => localStorage.removeItem('survey_'+q.name));
+  Swal.fire('Thank you','Your response has been recorded.','success').then(()=> window.location.href='thankyou.html');
+}
+
+loadQuestions();
+</script>
+</body>
+</html>
